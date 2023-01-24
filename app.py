@@ -39,7 +39,7 @@ def predict():
 
     body = request.get_data()
     # load and normalize image
-    input_image = Image.open(body)
+    input_image = Image.open(io.BytesIO(body))
 
     transform = transforms.Compose([
         transforms.ToTensor(),

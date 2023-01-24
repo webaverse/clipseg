@@ -9,14 +9,27 @@ from PIL import Image
 from torchvision import transforms
 from matplotlib import pyplot as plt
 
-from flask import Flask, Response
+from flask import Flask, request, Response
 
 
 app = Flask(__name__)
 
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
+    if (request.method == 'OPTIONS'):
+        # print('got options 1')
+        response = flask.Response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Headers'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = '*'
+        response.headers['Access-Control-Expose-Headers'] = '*'
+        response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
+        response.headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
+        response.headers['Cross-Origin-Resource-Policy'] = 'cross-origin'
+        # print('got options 2')
+        return response
+
     # load model
     model = CLIPDensePredT(version='ViT-B/16', reduce_dim=64)
     model.eval()
@@ -24,12 +37,9 @@ def predict():
     # non-strict, because we only stored decoder weights (not CLIP weights)
     model.load_state_dict(torch.load('weights/rd64-uni.pth', map_location=torch.device('cpu')), strict=False)
 
+    body = request.get_data()
     # load and normalize image
-    #input_image = Image.open('example_image.jpg')
-
-    # or load from URL...
-    image_url = 'https://farm5.staticflickr.com/4141/4856248695_03475782dc_z.jpg'
-    input_image = Image.open(requests.get(image_url, stream=True).raw)
+    input_image = Image.open(body)
 
     transform = transforms.Compose([
         transforms.ToTensor(),

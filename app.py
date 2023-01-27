@@ -45,6 +45,8 @@ def predict():
     prompts_json_string = request.args.get('prompts', default='[]', type=str)
     prompts = json.loads(prompts_json_string)
 
+    print(f"prompts: {prompts}")
+
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),

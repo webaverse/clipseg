@@ -54,7 +54,7 @@ def predict():
     ])
     img = transform(input_image).unsqueeze(0)
 
-    # prompts = ['a glass', 'something to fill', 'wood', 'a jar']
+    prompts = ['a glass', 'something to fill', 'wood', 'a jar']
 
     # predict
     preds = None

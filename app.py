@@ -10,6 +10,7 @@ from torchvision import transforms
 from matplotlib import pyplot as plt
 
 from flask import Flask, request, Response
+import flask
 import json
 
 app = Flask(__name__)

@@ -54,23 +54,19 @@ def predict():
     ])
     img = transform(input_image).unsqueeze(0)
 
-    prompts = ['a glass', 'something to fill', 'wood', 'a jar']
-
     # predict
     preds = None
     with torch.no_grad():
-        preds = model(img.repeat(4,1,1,1), prompts)[0]
+        preds = model(img.repeat(len(prompts),1,1,1), prompts)[0]
 
     #img_from_tensor = Image.fromarray(input_image, 'RGB')
 
     print(f"preds.shape: {preds.shape}")
 
-    img_byte_arr = io.BytesIO()
-    #img_from_tensor.save(img_byte_arr, format='PNG')
-    input_image.save(img_byte_arr, format='PNG')
-    img_byte_arr = img_byte_arr.getvalue()
+    # read as float32 bytes
+    pred_bytes = preds.numpy().astype('float32').tobytes()
 
-    response = Response(img_byte_arr)
+    response = Response(pred_bytes)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = '*'
     response.headers['Access-Control-Allow-Methods'] = '*'

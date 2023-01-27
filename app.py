@@ -63,8 +63,8 @@ def predict():
 
     print(f"preds.shape: {preds.shape}")
 
-    # read as float32 bytes
-    pred_bytes = preds.numpy().astype('float32').tobytes()
+    # read as int
+    pred_bytes = preds.numpy().astype('int').tobytes()
 
     response = Response(pred_bytes)
     response.headers['Access-Control-Allow-Origin'] = '*'

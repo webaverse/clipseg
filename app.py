@@ -42,7 +42,7 @@ def predict():
     input_image = Image.open(io.BytesIO(body))
 
     # parse prompts argument which should be encoded as json
-    prompts_json_string = request.args.get('prompts')
+    prompts_json_string = request.args.get('prompts', default='[]', type=str)
     prompts = json.loads(prompts_json_string)
 
     transform = transforms.Compose([
